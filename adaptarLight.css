@@ -8,11 +8,11 @@ html, body{
     width: 100%;
 }
 header{
-    background-color: #203438;
+    background-color: #FFF5EE;
     height: 20vh;
 }
 main{
-    background-color: #203438;
+    background-color: #FFF5EE;
     height: 60vh;
     width: 100%;
     display: flex;
@@ -20,7 +20,7 @@ main{
     align-items: center;
 }
 footer{
-    background-color: #203438;
+    background-color: #FFF5EE;
     height: 20vh;
     display: flex;
     justify-content: center;
@@ -31,7 +31,7 @@ footer{
     justify-content: space-between;
 }
 #headerText{
-    color: #FFF5EE;
+    color: #203834;
     font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
@@ -41,7 +41,7 @@ footer{
 #headerIcon{
     padding-right: 22px;
     padding-top: 40px;
-    color: #FFF5EE;
+    color: #203834;
     font-size: 30px;
 }
 #mainImg{
@@ -51,7 +51,7 @@ footer{
     border-radius: 30px;
     width: 50%;
     height: 100%;
-    background-color: #203438;
+    background-color: #FFF5EE;
 }
 #image{
     display: flex;
@@ -72,9 +72,9 @@ footer{
     margin-right: 30px;
 }
 .mainText{
-    background-color: #FFF5EE;
+    background-color: #203834;
     border-radius: 20px;
-    color: #203438;
+    color: #FFF5EE;
     font-size: 32px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
@@ -85,13 +85,13 @@ footer{
     padding-left: 5px;
 }
 #footerText{
-    color: #FFF5EE;
+    color: #203834;
     font-size: 30px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-right: 6px;
 }
 #footerIcon{
-    color: #FFF5EE;
+    color: #203834;
     font-size: 35px;
 }
