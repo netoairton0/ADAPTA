@@ -10,17 +10,80 @@ html, body{
 }
 
 header{
-    background-color: #203438;
     height: 20vh;
+    transition: background-color 0s, color 0s;
 }
 
 main{
-    background-color: #203438;
+    transition: background-color 0s, color 0s;
     height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.light {
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.light header,
+.light main {
+    background-color: #FFF5EE;
+}
+
+.light .content {
+    background-color: #FFF5EE;
+}
+
+.light .text,
+.light .material-icons.icon-style {
+    color: #203438;
+}
+
+.light .headerButton {
+    background-color: #FFF5EE;
+    color: #203438;
+}
+.light .headerText,
+.light .description,
+.light #toggleTheme,
+.light #themeIcon{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.dark {
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.dark header,
+.dark main {
+    background-color: #203438;
+}
+
+.dark .content {
+    background-color: #2B4A50;
+}
+
+.dark .text,
+.dark .material-icons.icon-style {
+    color: #FFF5EE;
+}
+
+.dark .headerButton {
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.dark .headerText,
+.dark .description,
+.dark #toggleTheme,
+.dark #themeIcon{
+    background-color: #203438;
+    color: #FFF5EE;
 }
 
 .divHeader{
@@ -29,11 +92,11 @@ main{
     justify-content: space-between;
 }
 
-#logo{
+#themeImage{
     height: 100px;
 }
 
-#headerText{
+.headerText{
     color: #FFF5EE;
     font-size: 50px;
     font-weight: bold;
@@ -42,11 +105,18 @@ main{
     padding-top: 22px;
 }
 
-#headerIcon{
+#themeIcon{
+    cursor: pointer;
+    color: #FFF5EE;
+    font-size: 30px;
+}
+
+#toggleTheme{
     cursor: pointer;
     padding-right: 22px;
     color: #FFF5EE;
-    font-size: 30px;
+    border: none;
+    box-shadow: none;
 }
 
 .headerButton{
@@ -60,7 +130,7 @@ main{
     text-decoration: none;
 }
 
-#description {
+.description {
     font-size: 31px;
     font-weight: bold;
     color: #FFF5EE;

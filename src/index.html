@@ -11,11 +11,13 @@
     <header>
             <div class="divHeader">
                 <div class="divHeader">
-                    <img src="assets/images/adaptaLogoVerde.png" alt="logomarca do adapta. Uma letra A estilizada" id="logo">
-                    <p id="headerText">ADAPTA</p>
+                    <img src="assets/images/adaptaLogoVerde.png" alt="logomarca do adapta. Uma letra A estilizada" id="themeImage">
+                    <p class="headerText">ADAPTA</p>
                 </div>
                 <div class="divHeader">
-                    <span id="headerIcon" class="material-icons">light_mode</span>
+                    <button id="toggleTheme">
+                        <span id="themeIcon" class="material-icons">light_mode</span>
+                    </button>
                     <a class="headerButton" href="login.html">Login</a>
                     <a class="headerButton" href="cadastro.html">Cadastro</a>
                 </div>
@@ -63,11 +65,12 @@
             <span class="indicator" onclick="currentSlide(2)"></span>
             <span class="indicator" onclick="currentSlide(3)"></span>
         </div>
-        <div id="description">
+        <div class="description">
             Adaptando o mundo com você
         </div>
     </main>
 
     <script src="slider.js"></script>
+    <script src="theme.js"></script>
 </body>
 </html>
