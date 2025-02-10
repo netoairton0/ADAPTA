@@ -8,21 +8,76 @@ html, body{
     width: 100%;
 }
 header{
-    background-color: #203438;
     height: 20vh;
 }
 main{
-    background-color: #203438;
     height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.light {
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.light header,
+.light main,
+.light #divHeader {
+    background-color: #FFF5EE;
+}
+
+.light .botaoAdaptar,
+.dark .iconButton.material-icons{
+    color: #FFF5EE;
+    background-color: #203438;
+}
+
+.light #themeIcon,
+.light .headerText,
+.light #troggleTheme{
+    color: #203438;
+    background-color: #FFF5EE;
+}
+
+.dark {
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.dark header,
+.dark main,
+.dark #divHeader {
+    background-color: #203438;
+}
+
+.dark .botaoAdaptar,
+.dark .iconButton.material-icons{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.dark #themeIcon,
+.dark .headerText,
+.dark #troggleTheme{
+    color: #FFF5EE;
+    background-color: #203438;
+}
+
+#toggleTheme{
+    cursor: pointer;
+    color: #FFF5EE;
+    border: none;
+    box-shadow: none;
+    padding-right: 22px;
+}
+
 #divHeader{
     display: flex;
     justify-content: space-between;
 }
-#headerText{
+.headerText{
     color: #FFF5EE;
     font-size: 50px;
     font-weight: bold;
@@ -30,9 +85,7 @@ main{
     padding-left: 22px;
     padding-top: 22px;
 }
-#headerIcon{
-    padding-right: 22px;
-    padding-top: 40px;
+#themeIcon{
     color: #FFF5EE;
     font-size: 30px;
 }

@@ -28,11 +28,11 @@ main{
     justify-content: space-between;
 }
 
-#logo{
+#themeImage{
     height: 100px;
 }
 
-#headerText {
+.headerText {
     color: #203438;
     font-size: 50px;
     font-weight: bold;

@@ -10,17 +10,69 @@ html, body{
 }
 
 header{
-    background-color: #203438;
     height: 20vh;
 }
 
 main{
-    background-color: #203438;
     height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.light {
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.light header,
+.light main {
+    background-color: #FFF5EE;
+}
+
+.light label{
+    color: #203438;
+}
+
+.light input{
+    border-radius: 20px;
+    border: solid;
+    border-width: 2px;
+}
+
+.light .headerText,
+.light #loginTitle,
+.light #registerText,
+.light #registerText a,
+.light #toggleTheme,
+.light #themeIcon{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.dark {
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.dark header,
+.dark main {
+    background-color: #203438;
+}
+
+.dark label{
+    color: #FFF5EE;
+}
+
+.dark .headerText, 
+.dark #loginTitle,
+.dark #registerText,
+.dark #registerText a,
+.dark #toggleTheme,
+.dark #themeIcon{
+    background-color: #203438;
+    color: #FFF5EE;
 }
 
 .divHeader{
@@ -32,13 +84,17 @@ main{
     height: 100px;
 }
 
-#headerText {
+.headerText{
     color: #FFF5EE;
     font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-left: 22px;
     padding-top: 22px;
+}
+
+#themeImage{
+    height: 100px;
 }
 
 #headerIcon{
@@ -60,6 +116,20 @@ main{
 #loginForm{
     display: flex;
     flex-direction: column;
+}
+
+#themeIcon{
+    cursor: pointer;
+    color: #FFF5EE;
+    font-size: 30px;
+}
+
+#toggleTheme{
+    cursor: pointer;
+    padding-right: 22px;
+    color: #FFF5EE;
+    border: none;
+    box-shadow: none;
 }
 
 label {
