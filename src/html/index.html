@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAPTA</title>
+    <link rel="stylesheet" href="../styles/home.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header>
+            <div class="divHeader">
+                <div class="divHeader">
+                    <img src="assets/images/adaptaLogoVerde.png" alt="logomarca do adapta. Uma letra A estilizada" id="themeImage">
+                    <p class="headerText">ADAPTA</p>
+                </div>
+                <div class="divHeader">
+                    <button id="toggleTheme">
+                        <span id="themeIcon" class="material-icons">light_mode</span>
+                    </button>
+                    <a class="headerButton" href="login">Login</a>
+                    <a class="headerButton" href="cadastro">Cadastro</a>
+                </div>
+            </div>
+    </header>
+
+    <main>
+        <div id="slider">
+            <div class="slide fade">
+                <div class="content">
+                    <div class="slideImage">
+                        <span class="icon-style material-icons">language</span>
+                    </div>
+                    <div class="text">
+                        Adapta foi pensado para ajudar a entender tudo que precisar, de maneira conveniente, da melhor forma possível!
+                    </div>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="content">
+                    <div class="slideImage">
+                        <span class="icon-style material-icons">drive_folder_upload</span>
+                    </div>
+                    <div class="text">
+                        Envie o arquivo que precisa adaptar, ecolha como prefere o formato e pronto! Simples e prático
+                    </div>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="content">
+                    <div class="slideImage">
+                        <span  class="icon-style material-icons">image</span>
+                        <span  class="icon-style material-icons">arrow_downward</span>
+                        <span  class="icon-style material-icons">spatial_audio_off</span>
+                    </div>
+                    <div class="text">
+                        Imagens em áudio, Áudio para texto... São inúmeras formas de adaptar conteúdo para a melhor maneira de entender
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center">
+            <span class="indicator" onclick="currentSlide(1)"></span>
+            <span class="indicator" onclick="currentSlide(2)"></span>
+            <span class="indicator" onclick="currentSlide(3)"></span>
+        </div>
+        <div class="description">
+            Adaptando o mundo com você
+        </div>
+    </main>
+
+    <script src="../javascript/slider.js"></script>
+    <script src="../javascript/theme.js"></script>
+</body>
+</html>
