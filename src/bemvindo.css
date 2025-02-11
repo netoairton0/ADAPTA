@@ -41,6 +41,12 @@ main{
     background-color: #FFF5EE;
 }
 
+.light #increaseFont,
+.light #decreaseFont{
+    color: #203438;
+    background-color: #FFF5EE;
+}
+
 .dark {
     background-color: #203438;
     color: #FFF5EE;
@@ -65,30 +71,48 @@ main{
     background-color: #203438;
 }
 
-#toggleTheme{
-    cursor: pointer;
+.dark #increaseFont,
+.dark #decreaseFont{
     color: #FFF5EE;
+    background-color: #203438;
+}
+
+
+#toggleTheme{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     border: none;
     box-shadow: none;
-    padding-right: 22px;
 }
 
 #divHeader{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .headerText{
     color: #FFF5EE;
-    font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-left: 22px;
     padding-top: 22px;
 }
 #themeIcon{
-    color: #FFF5EE;
     font-size: 30px;
+    padding-right: 22px;
 }
+
+#increaseFont,
+#decreaseFont{
+    box-shadow: none;
+    border: none;
+    font-size: 20px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
 #divBotoes{
     display: flex;
     justify-content: center;
@@ -104,8 +128,8 @@ main{
     margin: 38px;
 }
 .textButton{
-    font-size: 32px;
     font-weight: bold;
+    font-size: 32px;
 }
 .iconButton.material-icons{
     font-size: 200px;

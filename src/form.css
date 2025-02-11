@@ -46,7 +46,9 @@ main{
 .light #registerText,
 .light #registerText a,
 .light #toggleTheme,
-.light #themeIcon{
+.light #themeIcon,
+.light #increaseFont,
+.light #decreaseFont{
     background-color: #FFF5EE;
     color: #203438;
 }
@@ -70,7 +72,9 @@ main{
 .dark #registerText,
 .dark #registerText a,
 .dark #toggleTheme,
-.dark #themeIcon{
+.dark #themeIcon,
+.dark #increaseFont,
+.dark #decreaseFont{
     background-color: #203438;
     color: #FFF5EE;
 }
@@ -86,7 +90,6 @@ main{
 
 .headerText{
     color: #FFF5EE;
-    font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-left: 22px;
@@ -105,9 +108,16 @@ main{
     font-size: 30px;
 }
 
+#increaseFont,
+#decreaseFont{
+    box-shadow: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 #loginTitle {
     color: #FFF5EE;
-    font-size: 31px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     margin-bottom: 30px;
@@ -134,7 +144,6 @@ main{
 
 label {
     color: #FFF5EE;
-    font-size: 20px;
     margin-left: 20px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
@@ -168,7 +177,6 @@ button {
 
 #registerText {
     color: #FFF5EE;
-    font-size: 16px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     margin-top: 30px;

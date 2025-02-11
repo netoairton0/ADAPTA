@@ -26,24 +26,122 @@ footer{
     justify-content: center;
     align-items: center;
 }
+
+.light {
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.light header,
+.light main,
+.light footer,
+.light #divHeader {
+    background-color: #FFF5EE;
+}
+
+.dark .iconButton.material-icons{
+    color: #FFF5EE;
+    background-color: #203438;
+}
+
+.light #themeIcon,
+.light .headerText,
+.light #troggleTheme,
+.light #increaseFont,
+.light #decreaseFont{
+    color: #203438;
+    background-color: #FFF5EE;
+}
+
+.light .mainText{
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.light #footerText,
+.light #footerIcon{
+    color: #203438;
+}
+
+.light #mainImg{
+    background-color: #FFF5EE;
+}
+
+.dark {
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
+.dark header,
+.dark main,
+.dark footer,
+.dark #divHeader {
+    background-color: #203438;
+}
+
+.dark .iconButton.material-icons{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.dark #themeIcon,
+.dark .headerText,
+.dark #troggleTheme,
+.dark #increaseFont,
+.dark #decreaseFont{
+    color: #FFF5EE;
+    background-color: #203438;
+}
+
+.dark .mainText{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
+.dark #footerText,
+.dark #footerIcon{
+    color: #FFF5EE;
+}
+
+.dark #mainImg{
+    background-color: #203438;
+}
+
+#toggleTheme{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+}
+
 #divHeader{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
-#headerText{
+.headerText{
     color: #FFF5EE;
-    font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-left: 22px;
     padding-top: 22px;
 }
-#headerIcon{
-    padding-right: 22px;
-    padding-top: 40px;
-    color: #FFF5EE;
+#themeIcon{
     font-size: 30px;
+    padding-right: 22px;
 }
+
+#increaseFont,
+#decreaseFont{
+    box-shadow: none;
+    border: none;
+    font-size: 20px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
 #mainImg{
     display: flex;
     justify-content: center;
@@ -75,7 +173,6 @@ footer{
     background-color: #FFF5EE;
     border-radius: 20px;
     color: #203438;
-    font-size: 32px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     margin: 20px;
@@ -86,7 +183,6 @@ footer{
 }
 #footerText{
     color: #FFF5EE;
-    font-size: 30px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-right: 6px;

@@ -11,8 +11,18 @@
     <header>
         <div>
             <div id="divHeader">
-                <p id="headerText">Adaptar</p>
-                <span id="headerIcon" class="material-icons">light_mode</span>
+                <div id="divHeader">
+                    <p class="headerText">Adaptar</p>
+                </div>
+                <div id="divHeader">
+                    <div class="divHeader">
+                        <button id="increaseFont">A+</button>
+                        <button id="decreaseFont">A-</button>
+                    </div>
+                    <button id="toggleTheme">
+                        <span id="themeIcon" class="material-icons">light_mode</span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -35,5 +45,8 @@
             <span id="footerIcon" class="material-icons">upload</span>
         </div>
     </footer>
+
+    <script src="theme.js"></script>
+    <script src="fonts.js"></script>
 </body>
 </html>

@@ -54,6 +54,12 @@ main{
     color: #203438;
 }
 
+.light #increaseFont,
+.light #decreaseFont{
+    background-color: #FFF5EE;
+    color: #203438;
+}
+
 .dark {
     background-color: #203438;
     color: #FFF5EE;
@@ -86,6 +92,12 @@ main{
     color: #FFF5EE;
 }
 
+.dark #increaseFont,
+.dark #decreaseFont{
+    background-color: #203438;
+    color: #FFF5EE;
+}
+
 .divHeader{
     display: flex;
     align-items: center;
@@ -98,11 +110,19 @@ main{
 
 .headerText{
     color: #FFF5EE;
-    font-size: 50px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-left: 22px;
     padding-top: 22px;
+}
+
+#increaseFont,
+#decreaseFont{
+    box-shadow: none;
+    border: none;
+    font-size: 20px;
+    padding-right: 10px;
+    cursor: pointer;
 }
 
 #themeIcon{
@@ -121,7 +141,6 @@ main{
 
 .headerButton{
     cursor: pointer;
-    font-size: 31px;
     font-weight: bold;
     color: #FFF5EE;
     margin-right: 30px;
@@ -131,7 +150,6 @@ main{
 }
 
 .description {
-    font-size: 31px;
     font-weight: bold;
     color: #FFF5EE;
     font-family: Arial, Helvetica, sans-serif;
@@ -164,7 +182,6 @@ main{
 
 .text {
     color: #203438;
-    font-size: 28px;
     font-weight: bold;
     padding: 8px 12px;
     font-family: Arial, Helvetica, sans-serif;
