@@ -33,16 +33,22 @@
             <div id="resultPreview">
                 <% if (output === 'image') { %>
                     <img src="../../generated/example-image.jpg" alt="Resultado da Imagem">
-                    <a href="../../generated/example-image.jpg" download="example-image.jpg">Download Imagem</a>
+                    <div class="downloadButton">
+                        <a href="../../generated/example-image.jpg" download="example-image.jpg">Baixar Imagem</a>
+                    </div>
                 <% } else if (output === 'audio') { %>
                     <audio controls>
-                        <source src="../../generated/example-audio.mp3" type="audio/mpeg">
+                        <source src="../../generated/example-audio.wav" type="audio/mpeg">
                         Seu navegador não suporta o elemento de áudio.
                     </audio>
-                    <a href="../../generated/example-audio.mp3" download="example-audio.mp3">Download Áudio</a>
+                    <div class="downloadButton">
+                        <a class="downloadButton" href="../../generated/example-audio.wav" download="example-audio.mp3">Baixar Áudio</a>
+                    </div>
                 <% } else if (output === 'text') { %>
                     <iframe src="../../generated/example-text.txt" style="width: 100%; height: 400px;"></iframe>
-                    <a href="../../generated/example-text.txt" download="example-text.txt">Download Texto</a>
+                    <div class="downloadButton">
+                        <a class="downloadButton" href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>
+                    </div>
                 <% } %>
             </div>
         </div>

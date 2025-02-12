@@ -16,7 +16,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 app.use('/generated', express.static(path.join(__dirname, 'generated')));
 
-const pages = ['login', 'cadastro', 'bemvindo'];
+const pages = ['login', 'cadastro'];
 
 pages.forEach(page => {
     app.get(`/${page}`, (req, res) => {
@@ -26,6 +26,19 @@ pages.forEach(page => {
 
 app.get(`/`, (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'html', `index.html`));
+});
+
+app.get('/bemvindo', (req, res) => {
+    const userType = req.cookies.userType;
+    let history = [];
+
+    if (userType === 'researcher') {
+        const email = req.cookies.email;
+        const allHistory = JSON.parse(fs.readFileSync('data/history/history.json', 'utf8'));
+        history = allHistory.filter(entry => entry.username === email);
+    }
+
+    res.render('bemvindo', { userType, history });
 });
 
 app.get('/adaptar', (req, res) => {
@@ -71,6 +84,22 @@ app.post('/file/upload', function (req, res) {
                 '<p> motivo: ' + err.message);
             return console.log(err.message);
         }
+
+        const userType = req.body.userType;
+        const fileName = req.file.filename;
+        const outputType = req.body.outputType; // Get outputType from request
+
+        if (userType === 'researcher') {
+            const users = JSON.parse(fs.readFileSync('data/users/users.json', 'utf8'));
+            const user = users.find(u => u.email === req.cookies.email);
+
+            if (user) {
+                const history = JSON.parse(fs.readFileSync('data/history/history.json', 'utf8'));
+                history.push({ username: user.email, filename: fileName, outputType: outputType }); // Include outputType
+                fs.writeFileSync('data/history/history.json', JSON.stringify(history, null, 2));
+            }
+        }
+
         res.send('<h2>Upload realizado com sucesso!</h2>');
     });
 });
@@ -104,6 +133,19 @@ app.get('/decrease-font', (req, res) => {
     res.json({ fonte: tamanhoFonte });
 });
 
+app.get('/api/history', (req, res) => {
+    const userType = req.cookies.userType;
+    let history = [];
+
+    if (userType === 'researcher') {
+        const email = req.cookies.email;
+        const allHistory = JSON.parse(fs.readFileSync('data/history/history.json', 'utf8'));
+        history = allHistory.filter(entry => entry.username === email);
+    }
+
+    res.json({ history });
+});
+
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
     const users = JSON.parse(fs.readFileSync('data/users/users.json', 'utf8'));
@@ -112,6 +154,7 @@ app.post('/login', (req, res) => {
 
     if (user) {
         res.cookie('userType', user.type, { maxAge: 86400000 }); // Expira em 1 dia
+        res.cookie('email', email, { maxAge: 86400000 }); // Set email cookie
         res.redirect('/bemvindo');
     } else {
         res.status(401).send('<script>alert("Usuário não cadastrado"); window.location.href = "/login";</script>');

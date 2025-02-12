@@ -42,9 +42,36 @@
                 <span class="textButton">Adaptar<br>texto</span>
             </button>
         </div>
+
+        <% if (userType === 'researcher') { %>
+            <div id="historyContainer">
+                <h2>Histórico de Uploads</h2>
+                <ul>
+                    <% history.forEach(entry => { %>
+                        <li>
+                            <p>Arquivo: <%= entry.filename %></p>
+                            <% if (entry.outputType === 'image') { %>
+                                <div class="downloadButton">
+                                    <a href="../../generated/example-image.jpg" download="example-image.jpg">Baixar Imagem</a>
+                                </div>
+                            <% } else if (entry.outputType === 'audio') { %>
+                                <div class="downloadButton">
+                                    <a href="../../generated/example-audio.wav" download="example-audio.mp3">Baixar Áudio</a>
+                                </div>
+                            <% } else if (entry.outputType === 'text') { %>
+                                <div class="downloadButton">
+                                    <a href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>
+                                </div>
+                            <% } %>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        <% } %>
     </main>
 
     <script src="../javascript/theme.js"></script>
     <script src="../javascript/fonts.js"></script>
+    <script src="../javascript/bemvindo.js"></script>
 </body>
 </html>

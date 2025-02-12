@@ -1,0 +1,27 @@
+[
+  {
+    "username": "user2@example.com",
+    "filename": "1739382732293-example-image.jpg",
+    "outputType": "text"
+  },
+  {
+    "username": "user2@example.com",
+    "filename": "1739383448208-example-image.jpg",
+    "outputType": "text"
+  },
+  {
+    "username": "user2@example.com",
+    "filename": "1739383450403-example-image.jpg",
+    "outputType": "text"
+  },
+  {
+    "username": "user2@example.com",
+    "filename": "1739383451851-example-image.jpg",
+    "outputType": "audio"
+  },
+  {
+    "username": "user2@example.com",
+    "filename": "1739383453670-example-image.jpg",
+    "outputType": "audio"
+  }
+]
