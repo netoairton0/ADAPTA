@@ -6,6 +6,8 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     const mainText1 = document.getElementById('mainText1');
     const mainText2 = document.getElementById('mainText2');
 
+    console.log(fileType)
+
     if (file) {
         console.log(file);
         previewContainer.style.display = 'flex';
@@ -35,12 +37,42 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             media.appendChild(iframe);
         }
 
+        const uploadFile = (maintextType) => {
+            const formData = new FormData();
+            formData.append('filename', file);
+
+            fetch('/file/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Success:', result);
+                window.location.href = `/result?output=${maintextType}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+
         mainText1.addEventListener('click', () => {
-            window.location.href = `/result?output=${mainText1.textContent}`;
+            let maintextType
+            if (fileType === "image" || fileType === "audio") {
+                maintextType = "text";
+            } else {
+                maintextType = "audio";
+            }
+            uploadFile(maintextType);
         });
 
         mainText2.addEventListener('click', () => {
-            window.location.href = `/result?output=${mainText2.textContent}`;
+            let maintextType
+            if (fileType === "image" ) {
+                maintextType = "audio";
+            } else {
+                maintextType = "image";
+            } 
+            uploadFile(maintextType)
         });
     } else {
         previewContainer.style.display = 'none';

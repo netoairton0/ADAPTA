@@ -67,6 +67,7 @@ footer{
 
 .light #media{
     background-color: #203438;
+    color: #FFF5EE;
 }
 
 .dark {
@@ -107,6 +108,7 @@ footer{
 
 .dark #media{
     background-color: #FFF5EE;
+    color: #203438;
 }
 
 #toggleTheme{
@@ -157,7 +159,6 @@ footer{
     justify-content: center;
     align-items: center;
     border-radius: 30px;
-
     padding: 5vh;
     width: 40vw;
     height: 100%;
@@ -195,6 +196,7 @@ footer{
     margin: 20px;
     width: 80%;
     height: 15%;
+    cursor: pointer;
 }
 #footerText{
     color: #FFF5EE;

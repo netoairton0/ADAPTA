@@ -31,18 +31,20 @@
         <div id="resultContainer">
             <h2>Resultado adaptado</h2>
             <div id="resultPreview">
-                <% if (output.includes('imagem')) { %>
+                <% if (output === 'image') { %>
                     <img src="../../generated/example-image.jpg" alt="Resultado da Imagem">
-                <% } else if (output.includes('áudio')) { %>
+                    <a href="../../generated/example-image.jpg" download="example-image.jpg">Download Imagem</a>
+                <% } else if (output === 'audio') { %>
                     <audio controls>
-                        <source src="/generated/example-audio.mp3" type="audio/mpeg">
+                        <source src="../../generated/example-audio.mp3" type="audio/mpeg">
                         Seu navegador não suporta o elemento de áudio.
                     </audio>
-                <% } else if (output.includes('texto')) { %>
-                    <iframe src="/generated/example-text.txt" style="width: 100%; height: 100%;"></iframe>
+                    <a href="../../generated/example-audio.mp3" download="example-audio.mp3">Download Áudio</a>
+                <% } else if (output === 'text') { %>
+                    <iframe src="../../generated/example-text.txt" style="width: 100%; height: 400px;"></iframe>
+                    <a href="../../generated/example-text.txt" download="example-text.txt">Download Texto</a>
                 <% } %>
             </div>
-            <a href="/generated/example-<%= output.includes('imagem') ? 'image.jpg' : output.includes('áudio') ? 'audio.mp3' : 'text.txt' %>" download>Baixar Arquivo</a>
         </div>
     </main>
 

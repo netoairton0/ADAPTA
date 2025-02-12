@@ -46,7 +46,7 @@
                     <% } else if (fileType === 'audio') { %>
                         Gerar imagem a partir do áudio
                     <% } else if (fileType === 'text') { %>
-                        Descrição visual do texto
+                        Visualização do texto
                     <% } %>
                 </button>
             </div>
@@ -59,7 +59,15 @@
             <span id="footerIcon" class="material-icons">upload</span>
         </div>
         <form id="mediaUpload" action="/file/upload?type=<%= fileType %>" method="post" enctype="multipart/form-data">
-            <input type="file" name="filename" accept="image/*,audio/*,text/*" id="fileInput">
+            <input type="file" name="filename" 
+            <% if (fileType === 'image') { %>
+                accept="image/*"
+            <% } else if (fileType === 'audio') { %>
+                accept="audio/*"
+            <% } else if (fileType === 'text') { %>
+                accept="text/plain"
+            <% } %>
+            id="fileInput">
         </form>    
     </footer>
 

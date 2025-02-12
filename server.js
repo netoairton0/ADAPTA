@@ -14,6 +14,7 @@ app.use(express.static('src'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
+app.use('/generated', express.static(path.join(__dirname, 'generated')));
 
 const pages = ['login', 'cadastro', 'bemvindo'];
 
