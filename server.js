@@ -7,12 +7,15 @@ const fs = require('fs')
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src', 'views'));
+
 app.use(express.static('src'));
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 
-const pages = ['login', 'cadastro', 'bemvindo', 'adaptar'];
+const pages = ['login', 'cadastro', 'bemvindo'];
 
 pages.forEach(page => {
     app.get(`/${page}`, (req, res) => {
@@ -22,6 +25,16 @@ pages.forEach(page => {
 
 app.get(`/`, (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'html', `index.html`));
+});
+
+app.get('/adaptar', (req, res) => {
+    const fileType = req.query.type || 'arquivo';
+    res.render('adaptar', { fileType, fileUploaded: false, filePath: null });
+});
+
+app.get('/result', (req, res) => {
+    const output = req.query.output;
+    res.render('result', { output });
 });
 
 const maxSize = 1024*1024*20; // Limite de tamanho de upload - 20MB
@@ -35,18 +48,29 @@ const storage = multer.diskStorage({ //configurações de armazenamento do multe
     }
 });
 
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'audio/wav', 'text/plain'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Tipo de arquivo não permitido'), false);
+    }
+};
+
 const upload = multer({
     storage : storage,
-    limits  : { fileSize: maxSize }
+    limits  : { fileSize: maxSize },
+    fileFilter: fileFilter
 }).single('filename');
 
-app.post('/file/upload', function(req, res) {
+app.post('/file/upload', function (req, res) {
     upload(req, res, function (err) {
         if (err) {
-            res.send(' <h2>O seu upload NÃO foi realizado! <h2>' +
-            '<p> motivo: '+err.message);
+            res.send('<h2>O seu upload NÃO foi realizado! <h2>' +
+                '<p> motivo: ' + err.message);
             return console.log(err.message);
         }
+        res.send('<h2>Upload realizado com sucesso!</h2>');
     });
 });
 
@@ -87,7 +111,7 @@ app.post('/login', (req, res) => {
 
     if (user) {
         res.cookie('userType', user.type, { maxAge: 86400000 }); // Expira em 1 dia
-        res.redirect('/adaptar');
+        res.redirect('/bemvindo');
     } else {
         res.status(401).send('<script>alert("Usuário não cadastrado"); window.location.href = "/login";</script>');
     }

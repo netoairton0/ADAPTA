@@ -6,6 +6,7 @@
 html, body{
     height: 100%;
     width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
 }
 header{
     background-color: #203438;
@@ -23,6 +24,7 @@ footer{
     background-color: #203438;
     height: 20vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -63,8 +65,8 @@ footer{
     color: #203438;
 }
 
-.light #mainImg{
-    background-color: #FFF5EE;
+.light #media{
+    background-color: #203438;
 }
 
 .dark {
@@ -103,8 +105,8 @@ footer{
     color: #FFF5EE;
 }
 
-.dark #mainImg{
-    background-color: #203438;
+.dark #media{
+    background-color: #FFF5EE;
 }
 
 #toggleTheme{
@@ -142,15 +144,26 @@ footer{
     cursor: pointer;
 }
 
-#mainImg{
+#previewContainer {
+    display: none; 
+    width: 100%; 
+    height: 100%; 
+    justify-content: space-evenly; 
+    align-items: center
+}
+
+#media{
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 30px;
-    width: 50%;
+
+    padding: 5vh;
+    width: 40vw;
     height: 100%;
     background-color: #203438;
 }
+
 #image{
     display: flex;
     justify-content: center;
@@ -160,6 +173,7 @@ footer{
     width: 50%;
     height: 100%;
 }
+
 #mainTextDiv{
     display: flex;
     justify-content: center;
@@ -170,6 +184,9 @@ footer{
     margin-right: 30px;
 }
 .mainText{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #FFF5EE;
     border-radius: 20px;
     color: #203438;
@@ -178,8 +195,6 @@ footer{
     margin: 20px;
     width: 80%;
     height: 15%;
-    padding-top: 10px;
-    padding-left: 5px;
 }
 #footerText{
     color: #FFF5EE;

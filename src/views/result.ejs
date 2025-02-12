@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAPTA - Result</title>
+    <link rel="stylesheet" href="../styles/adaptar.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div>
+            <div id="divHeader">
+                <div id="divHeader">
+                    <p class="headerText">Resultado</p>
+                </div>
+                <div id="divHeader">
+                    <div class="divHeader">
+                        <button id="increaseFont">A+</button>
+                        <button id="decreaseFont">A-</button>
+                    </div>
+                    <button id="toggleTheme">
+                        <span id="themeIcon" class="material-icons">light_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="resultContainer">
+            <h2>Resultado adaptado</h2>
+            <div id="resultPreview">
+                <% if (output.includes('imagem')) { %>
+                    <img src="../../generated/example-image.jpg" alt="Resultado da Imagem">
+                <% } else if (output.includes('áudio')) { %>
+                    <audio controls>
+                        <source src="/generated/example-audio.mp3" type="audio/mpeg">
+                        Seu navegador não suporta o elemento de áudio.
+                    </audio>
+                <% } else if (output.includes('texto')) { %>
+                    <iframe src="/generated/example-text.txt" style="width: 100%; height: 100%;"></iframe>
+                <% } %>
+            </div>
+            <a href="/generated/example-<%= output.includes('imagem') ? 'image.jpg' : output.includes('áudio') ? 'audio.mp3' : 'text.txt' %>" download>Baixar Arquivo</a>
+        </div>
+    </main>
+
+    <script src="../javascript/theme.js"></script>
+    <script src="../javascript/fonts.js"></script>
+</body>
+</html>

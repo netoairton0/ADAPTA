@@ -28,30 +28,43 @@
     </header>
 
     <main>
-        <div style="display: flex; width: 100%; height: 100%; justify-content: space-evenly; align-items: center;">
-            <div id="mainImg">
-                <div id="image"></div>
-            </div>
+        <div id="previewContainer">
+            <div id="media"></div>
             <div id="mainTextDiv">
-                <p class="mainText">Transcrever imagem em texto</p>
-                <p class="mainText">Audiodescrição da imagem</p>
+                <button id="mainText1" class="mainText">
+                    <% if (fileType === 'image') { %>
+                        Transcrever imagem em texto
+                    <% } else if (fileType === 'audio') { %>
+                        Transcrever áudio em texto
+                    <% } else if (fileType === 'text') { %>
+                        Narrar texto
+                    <% } %>
+                </button>
+                <button id="mainText2" class="mainText">
+                    <% if (fileType === 'image') { %>
+                        Audiodescrição da imagem
+                    <% } else if (fileType === 'audio') { %>
+                        Gerar imagem a partir do áudio
+                    <% } else if (fileType === 'text') { %>
+                        Descrição visual do texto
+                    <% } %>
+                </button>
             </div>
         </div>
     </main>
 
     <footer>
         <div style="display: flex;">
-            <p id="footerText">Carregar arquivo</p>
+            <p id="footerText">Carregar Arquivo</p>
             <span id="footerIcon" class="material-icons">upload</span>
         </div>
-        <form action='file/upload' method='post' encType="multipart/form-data">
-            <input type="file" name="filename">
-            </br>
-            <input type='submit' value='Upload!'>
-        </form>	
+        <form id="mediaUpload" action="/file/upload?type=<%= fileType %>" method="post" enctype="multipart/form-data">
+            <input type="file" name="filename" accept="image/*,audio/*,text/*" id="fileInput">
+        </form>    
     </footer>
 
     <script src="../javascript/theme.js"></script>
     <script src="../javascript/fonts.js"></script>
+    <script src="../javascript/adaptar.js"></script>
 </body>
 </html>

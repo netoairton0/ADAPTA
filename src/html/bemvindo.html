@@ -12,7 +12,7 @@
         <div>
             <div id="divHeader">
                 <div id="divHeader">
-                    <p class="headerText">Bem-vindo</p>
+                    <a href="/"><p class="headerText">Bem-vindo</p></a>
                 </div>
                 <div id="divHeader">
                     <div class="divHeader">
@@ -29,15 +29,15 @@
 
     <main>
         <div id="divBotoes">
-            <button class="botaoAdaptar">
+            <button class="botaoAdaptar" onclick="window.location.href='adaptar?type=image'">
                 <span class="material-icons iconButton">image</span>
                 <span class="textButton">Adaptar<br>imagem</span>
             </button>
-            <button class="botaoAdaptar">
+            <button class="botaoAdaptar" onclick="window.location.href='adaptar?type=audio'">
                 <span class="material-icons iconButton">volume_up</span>
                 <span class="textButton">Adaptar<br>audio</span>
             </button>
-            <button class="botaoAdaptar">
+            <button class="botaoAdaptar" onclick="window.location.href='adaptar?type=text'">
                 <span class="material-icons iconButton">text_format</span>
                 <span class="textButton">Adaptar<br>texto</span>
             </button>
