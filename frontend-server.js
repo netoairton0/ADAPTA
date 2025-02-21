@@ -190,7 +190,7 @@ app.get('/history', async (req, res) => {
     }
 });
 
-app.delete('/history/:index', async (req, res) => {
+app.post('/history/:index', async (req, res) => {
     try {
         const userType = req.cookies.userType;
         const email = req.cookies.email;

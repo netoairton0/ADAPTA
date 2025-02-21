@@ -1,14 +1,1 @@
-[
-  {
-    "username": "user2@example.com",
-    "filename": "1740143122300-example-image.jpg",
-    "outputType": "audio",
-    "timestamp": "2025-02-21T13:05:22.308Z"
-  },
-  {
-    "username": "user2@example.com",
-    "filename": "1740143705345-example-text.txt",
-    "outputType": "image",
-    "timestamp": "2025-02-21T13:15:05.353Z"
-  }
-]
+[]

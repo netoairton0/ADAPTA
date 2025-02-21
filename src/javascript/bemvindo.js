@@ -31,7 +31,7 @@ function fetchHistory() {
 
 function deleteEntry(index) {
     fetch(`/history/${index}`, {
-        method: 'DELETE'
+        method: 'POST'
     })
     .then(response => response.json())
     .then(data => {
