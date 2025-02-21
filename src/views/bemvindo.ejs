@@ -46,9 +46,9 @@
         <% if (userType === 'researcher') { %>
             <div id="historyContainer">
                 <h2>Histórico de Uploads</h2>
-                <ul>
-                    <% history.forEach(entry => { %>
-                        <li>
+                <ul id="historyList">
+                    <% history.forEach((entry, index) => { %>
+                        <li data-index="<%= index %>">
                             <p>Arquivo: <%= entry.filename %></p>
                             <% if (entry.outputType === 'image') { %>
                                 <div class="downloadButton">
@@ -63,6 +63,15 @@
                                     <a href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>
                                 </div>
                             <% } %>
+                            <button class="deleteButton" onclick="deleteEntry(<%= index %>)">
+                                <span id="themeIcon" class="material-icons">delete</span>
+                            </button>
+                            <button class="moveUpButton" onclick="moveEntryUp(<%= index %>)">
+                                <span id="themeIcon" class="material-icons">arrow_upward</span>
+                            </button>
+                            <button class="moveDownButton" onclick="moveEntryDown(<%= index %>)">
+                                <span id="themeIcon" class="material-icons">arrow_downward</span>
+                            </button>
                         </li>
                     <% }) %>
                 </ul>

@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/generated', express.static(path.join(__dirname, 'generated')));
 
-const maxSize = 1024*1024*20;
+const maxSize = 1024 * 1024 * 20;
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -50,16 +50,16 @@ async function fetchFromBackend(url, options = {}) {
             'Content-Type': 'application/json'
         }
     };
-    
+
     const mergedOptions = { ...defaultOptions, ...options };
-    
+
     try {
         const response = await fetch(`${API_SERVER}${url}`, mergedOptions);
-        
+
         if (!response.ok) {
             throw new Error(`Backend responded with status: ${response.status}`);
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error(`Error fetching from backend (${url}):`, error.message);
@@ -82,17 +82,17 @@ app.get('/bemvindo', async (req, res) => {
     try {
         const userType = req.cookies.userType;
         const email = req.cookies.email;
-        
+
         const data = await fetchFromBackend('/api/user-history', {
             headers: {
                 'user-email': email,
                 'user-type': userType
             }
         });
-        
-        res.render('bemvindo', { 
-            userType, 
-            history: data.history || [] 
+
+        res.render('bemvindo', {
+            userType,
+            history: data.history || []
         });
     } catch (error) {
         console.error('Error fetching welcome data:', error.message);
@@ -147,42 +147,42 @@ app.get('/get-theme', (req, res) => {
 });
 
 app.get('/get-font-size', (req, res) => {
-    const fontSize = req.cookies.fontSize || 20; 
+    const fontSize = req.cookies.fontSize || 20;
     res.json({ fonte: fontSize });
 });
 
 app.get('/toggle-theme', (req, res) => {
     const novoTema = req.cookies.tema === 'dark' ? 'light' : 'dark';
-    res.cookie('tema', novoTema, { maxAge: 86400000 }); 
+    res.cookie('tema', novoTema, { maxAge: 86400000 });
     res.json({ tema: novoTema });
 });
 
 app.get('/increase-font', (req, res) => {
     let tamanhoFonte = parseInt(req.cookies.fontSize) || 20;
-    tamanhoFonte = Math.min(tamanhoFonte + 5, 30); 
+    tamanhoFonte = Math.min(tamanhoFonte + 5, 30);
     res.cookie('fontSize', tamanhoFonte, { maxAge: 31536000000 });
     res.json({ fonte: tamanhoFonte });
 });
 
 app.get('/decrease-font', (req, res) => {
     let tamanhoFonte = parseInt(req.cookies.fontSize) || 20;
-    tamanhoFonte = Math.max(tamanhoFonte - 5, 10); 
+    tamanhoFonte = Math.max(tamanhoFonte - 5, 10);
     res.cookie('fontSize', tamanhoFonte, { maxAge: 31536000000 });
     res.json({ fonte: tamanhoFonte });
 });
 
-app.get('/api/history', async (req, res) => {
+app.get('/history', async (req, res) => {
     try {
         const userType = req.cookies.userType;
         const email = req.cookies.email;
-        
+
         const data = await fetchFromBackend('/api/user-history', {
             headers: {
                 'user-email': email,
                 'user-type': userType
             }
         });
-        
+
         res.json({ history: data.history || [] });
     } catch (error) {
         console.error('Error fetching history:', error.message);
@@ -190,10 +190,73 @@ app.get('/api/history', async (req, res) => {
     }
 });
 
+app.delete('/history/:index', async (req, res) => {
+    try {
+        const userType = req.cookies.userType;
+        const email = req.cookies.email;
+        const index = req.params.index;
+
+        const data = await fetchFromBackend(`/api/history/${index}`, {
+            method: 'DELETE',
+            headers: {
+                'user-email': email,
+                'user-type': userType
+            }
+        });
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error deleting history entry:', error.message);
+        res.status(500).json({ error: 'Failed to delete history entry' });
+    }
+});
+
+app.post('/history/move-up/:index', async (req, res) => {
+    try {
+        const userType = req.cookies.userType;
+        const email = req.cookies.email;
+        const index = req.params.index;
+
+        const data = await fetchFromBackend(`/api/history/move-up/${index}`, {
+            method: 'POST',
+            headers: {
+                'user-email': email,
+                'user-type': userType
+            }
+        });
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error moving history entry up:', error.message);
+        res.status(500).json({ error: 'Failed to move history entry up' });
+    }
+});
+
+app.post('/history/move-down/:index', async (req, res) => {
+    try {
+        const userType = req.cookies.userType;
+        const email = req.cookies.email;
+        const index = req.params.index;
+
+        const data = await fetchFromBackend(`/api/history/move-down/${index}`, {
+            method: 'POST',
+            headers: {
+                'user-email': email,
+                'user-type': userType
+            }
+        });
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error moving history entry down:', error.message);
+        res.status(500).json({ error: 'Failed to move history entry down' });
+    }
+});
+
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
         const data = await fetchFromBackend('/auth/login', {
             method: 'POST',
             body: JSON.stringify({
@@ -201,7 +264,7 @@ app.post('/login', async (req, res) => {
                 password
             })
         });
-        
+
         if (data.success) {
             res.cookie('userType', data.userType, { maxAge: 86400000 });
             res.cookie('email', email, { maxAge: 86400000 });
