@@ -1,9 +1,10 @@
 const express = require('express');
 const path = require('path');
+const FormData = require('form-data');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const https = require('https');
-const http = require('http');
+const axios = require('axios');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -30,7 +31,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'audio/wav', 'text/plain'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'audio/mpeg', 'audio/wav', 'text/plain'];
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
@@ -110,34 +111,39 @@ app.get('/result', (req, res) => {
     res.render('result', { output });
 });
 
-app.post('/file/upload', function (req, res) {
-    upload(req, res, async function (err) {
+app.post('/file/upload', (req, res) => {
+    upload(req, res, async (err) => {
         if (err) {
-            res.send('<h2>O seu upload NÃO foi realizado! <h2>' +
-                '<p> motivo: ' + err.message);
-            return console.log(err.message);
+            res.statusCode = 412;
+            return res.end('Error uploading file - ' + err.message);
         }
 
-        try {
-            const userType = req.body.userType;
-            const fileName = req.file.filename;
-            const outputType = req.body.outputType;
-            const email = req.cookies.email;
+        const form = new FormData();
+        form.append('filename', fs.createReadStream(req.file.path), {
+            filename: req.file.originalname,
+            contentType: req.file.mimetype
+        });
+        form.append('userType', req.cookies.userType);
+        form.append('email', req.cookies.email);
+        form.append('outputType', req.body.outputType);
 
-            await fetchFromBackend('/api/process-upload', {
-                method: 'POST',
-                body: JSON.stringify({
-                    userType,
-                    fileName,
-                    outputType,
-                    email
-                })
+        try {
+            await axios.post(`${API_SERVER}/api/process-upload`, form, {
+                headers: {
+                    ...form.getHeaders()
+                }
             });
 
-            res.send('<h2>Upload realizado com sucesso!</h2>');
+            res.json({
+                success: true,
+                message: 'Upload realizado com sucesso!'
+            });
+
         } catch (error) {
-            console.error('Error processing upload:', error.message);
-            res.status(500).send('<h2>Erro ao processar o upload no servidor!</h2>');
+            res.statusCode = 500;
+            res.end('Error forwarding file - ' + error.message);
+        } finally {
+            fs.unlinkSync(req.file.path)
         }
     });
 });

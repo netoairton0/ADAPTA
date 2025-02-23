@@ -1,12 +1,39 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const port = 4000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const maxSize = 1024 * 1024 * 20;
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'audio/mpeg', 'audio/wav', 'text/plain'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Tipo de arquivo não permitido'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: maxSize },
+    fileFilter: fileFilter
+}).single('filename');
 
 app.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
@@ -57,34 +84,40 @@ app.get('/api/user-history', (req, res) => {
 });
 
 app.post('/api/process-upload', (req, res) => {
-    const { userType, fileName, outputType, email } = req.body;
-    
-    try {
-        if (userType === 'researcher') {
-            const users = JSON.parse(fs.readFileSync('data/users/users.json', 'utf8'));
-            const user = users.find(u => u.email === email);
+    upload(req, res, (err) => {
+        if (err) {
+            res.statusCode = 412;
+            return res.end('Error uploading file - ' + err.message);
+        }
+        
+        try {
+            const { userType, outputType, email } = req.body;
 
-            if (user) {
+            if (userType === 'researcher') {
                 const history = JSON.parse(fs.readFileSync('data/history/history.json', 'utf8'));
-                history.push({ 
-                    username: user.email, 
-                    filename: fileName, 
+                history.push({
+                    username: email,
+                    filename: req.file.filename,
                     outputType: outputType,
+                    inputType: req.file.mimetype.split('/')[0],
                     timestamp: new Date().toISOString()
                 });
                 
                 fs.writeFileSync('data/history/history.json', JSON.stringify(history, null, 2));
             }
+
+            res.json({
+                success: true,
+                message: 'Upload realizado com sucesso!'
+            });
+        } catch (error) {
+            console.error('Error processing upload:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to process upload'
+            });
         }
-        
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Error processing upload:', error);
-        res.status(500).json({ 
-            success: false,
-            message: 'Failed to process upload'
-        });
-    }
+    });
 });
 
 app.delete('/api/history/:index', (req, res) => {
@@ -96,6 +129,14 @@ app.delete('/api/history/:index', (req, res) => {
         const userHistory = history.filter(entry => entry.username === email);
 
         if (index >= 0 && index < userHistory.length) {
+             const fileToDelete = userHistory[index].filename;
+
+             try {
+                 fs.unlinkSync(`uploads/${fileToDelete}`);
+             } catch (fileError) {
+                 console.error('Error deleting file:', fileError);
+             }
+
             userHistory.splice(index, 1);
             const updatedHistory = history.filter(entry => entry.username !== email).concat(userHistory);
             fs.writeFileSync('data/history/history.json', JSON.stringify(updatedHistory, null, 2));
