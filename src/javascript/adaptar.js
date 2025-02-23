@@ -37,6 +37,16 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             media.appendChild(iframe);
         }
 
+        function setLoading(loading) {
+            const loadingIndicator = document.getElementById('loading-indicator');
+        
+            if (loading) {
+                loadingIndicator.style.display = 'flex'
+            } else {
+            loadingIndicator.style.display = 'none';
+            }
+        }
+
         const getUserType = () => {
             const name = 'userType=';
             const decodedCookie = decodeURIComponent(document.cookie);
@@ -58,6 +68,8 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             formData.append('filename', file);
             formData.append('userType', getUserType());
             formData.append('outputType', maintextType); 
+
+            setLoading(true)
         
             fetch('/file/upload', {
                 method: 'POST',
@@ -66,9 +78,11 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
             .then(response => response.json())
             .then(result => {
                 console.log('Success:', result);
+                setLoading(false)
                 window.location.href = `/result?output=${maintextType}&path=${result.outputFilename}`;;
             })
             .catch(error => {
+                setLoading(false)
                 console.error('Error:', error);
             });
         };

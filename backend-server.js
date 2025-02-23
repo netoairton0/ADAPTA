@@ -137,7 +137,6 @@ app.post('/api/process-upload', (req, res) => {
                 });
     
                 const extractedText = responseData.choices[0].message.content;
-                console.log('Extracted text:', extractedText);
                 outputFilename = req.file.filename.replace(/\.[^.]+$/, '.txt');
                 outputFilePath = path.join(GENERATED_DIR, outputFilename);
                 fs.writeFileSync(outputFilePath, extractedText);
@@ -145,16 +144,17 @@ app.post('/api/process-upload', (req, res) => {
             } else if (inputType === 'image' && outputType === 'audio') {
                 // Image -> Text -> Audio
                 const imageBuffer = fs.readFileSync(inputFilePath);
+                const image = imageBuffer.toString('base64');
                 const extractedTextResponse = await openai.chat.completions.create({
-                    model: 'gpt-4-vision-preview',
+                    model: 'gpt-4o-mini',
                     messages: [
                         {
                             role: 'system',
-                            content: 'Describe this image in a detailed and informative way.'
+                            content: 'You are a core functioning part of a brazilian acessibility system. Please describe the image in a informative way in plain text in brazilian portuguese'
                         },
                         {
                             role: 'user',
-                            content: [{ type: 'image', image: imageBuffer }]
+                            content: [{ type: 'image_url', image_url:{ "url": `data:${req.file.mimetype};base64,${image}`} }]
                         }
                     ],
                     max_tokens: 500
@@ -166,7 +166,7 @@ app.post('/api/process-upload', (req, res) => {
                 responseData = await openai.audio.speech.create({
                     model: 'tts-1',
                     input: extractedText,
-                    voice: 'alloy'
+                    voice: 'ash'
                 });
     
                 outputFilename = req.file.filename.replace(/\.[^.]+$/, '.mp3');
@@ -233,7 +233,7 @@ app.post('/api/process-upload', (req, res) => {
                 responseData = await openai.audio.speech.create({
                     model: 'tts-1',
                     input: textContent,
-                    voice: 'alloy'
+                    voice: 'ash'
                 });
     
                 outputFilename = req.file.filename.replace(/\.[^.]+$/, '.mp3');

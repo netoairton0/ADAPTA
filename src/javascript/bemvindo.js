@@ -12,18 +12,26 @@ function fetchHistory() {
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = '';
             data.history.forEach((entry, index) => {
-                const listItem = document.createElement('li');
-                listItem.setAttribute('data-index', index);
-                listItem.innerHTML = `
-                    <p>Arquivo: ${entry.filename} (Tipo: ${entry.outputType})</p>
-                    ${entry.outputType === 'image' ? '<a href="../../generated/example-image.jpg" download="example-image.jpg">Baixar Imagem</a>' : ''}
-                    ${entry.outputType === 'audio' ? '<a href="../../generated/example-audio.wav" download="example-audio.mp3">Baixar Áudio</a>' : ''}
-                    ${entry.outputType === 'text' ? '<a href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>' : ''}
-                    <button class="deleteButton" onclick="deleteEntry(${index})">Delete</button>
-                    <button class="moveUpButton" onclick="moveEntryUp(${index})">Move Up</button>
-                    <button class="moveDownButton" onclick="moveEntryDown(${index})">Move Down</button>
-                `;
-                historyList.appendChild(listItem);
+                fetch(`/generated/${path}`)
+                    .then( response => {
+                        if (!response.ok) throw new Error('Failed to fetch media');
+                        response.blob()
+                            .then(blob => {
+                                const objectUrl = URL.createObjectURL(blob);
+                                const listItem = document.createElement('li');
+                                listItem.setAttribute('data-index', index);
+                                listItem.innerHTML = `
+                                    <p>Arquivo: ${entry.filename} (Tipo: ${entry.outputType})</p>
+                                    ${entry.outputType === 'image' ? '<a href="../../generated/example-image.jpg" download="example-image.jpg">Baixar Imagem</a>' : ''}
+                                    ${entry.outputType === 'audio' ? '<a href="../../generated/example-audio.wav" download="example-audio.mp3">Baixar Áudio</a>' : ''}
+                                    ${entry.outputType === 'text' ? '<a href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>' : ''}
+                                    <button class="deleteButton" onclick="deleteEntry(${index})">Delete</button>
+                                    <button class="moveUpButton" onclick="moveEntryUp(${index})">Move Up</button>
+                                    <button class="moveDownButton" onclick="moveEntryDown(${index})">Move Down</button>
+                                `;
+                                historyList.appendChild(listItem);
+                            })
+                    })
             });
         })
         .catch(error => console.error('Error fetching history:', error));

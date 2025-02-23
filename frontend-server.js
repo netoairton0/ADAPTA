@@ -17,7 +17,9 @@ app.use(express.static('src'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/generated', express.static(path.join(__dirname, 'generated')));
+
+const UPLOAD_DIR = 'uploads';
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
 
 const maxSize = 1024 * 1024 * 20;
 

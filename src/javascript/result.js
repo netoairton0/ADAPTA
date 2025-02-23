@@ -30,9 +30,9 @@ async function fetchAndDisplayMedia(mediaType, path) {
         switch(mediaType) {
             case 'image':
                 mediaHtml = `
-                    <img src="${objectUrl}" alt="Resultado da Imagem">
+                    <img id= "image" src="${objectUrl}" alt="Resultado da Imagem">
                     <div class="downloadButton">
-                        <a href="${objectUrl}" download="generated-image.png">Baixar Imagem</a>
+                        <a  class="downloadButton" href="${objectUrl}" download="generated-image.png">Baixar Imagem</a>
                     </div>
                 `;
                 break;
@@ -52,7 +52,7 @@ async function fetchAndDisplayMedia(mediaType, path) {
             case 'text':
                 const text = await blob.text();
                 mediaHtml = `
-                    <div style="width: 100%; height: 400px; border: 1px solid #ccc; overflow: auto; padding: 10px;">
+                    <div style="width: 50vw; height: 400px; border: 1px solid #ccc; overflow: auto; padding: 10px;">
                         <p>${text}</p>
                     </div>
                     <div class="downloadButton">
