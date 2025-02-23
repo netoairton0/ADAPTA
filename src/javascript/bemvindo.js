@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const userType = '<%= userType %>';
     if (userType === 'researcher') {
         fetchHistory();
     }
@@ -12,7 +11,7 @@ function fetchHistory() {
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = '';
             data.history.forEach((entry, index) => {
-                fetch(`/generated/${path}`)
+                fetch(`/generated/${entry.outputFilename}`)
                     .then( response => {
                         if (!response.ok) throw new Error('Failed to fetch media');
                         response.blob()
@@ -22,12 +21,12 @@ function fetchHistory() {
                                 listItem.setAttribute('data-index', index);
                                 listItem.innerHTML = `
                                     <p>Arquivo: ${entry.filename} (Tipo: ${entry.outputType})</p>
-                                    ${entry.outputType === 'image' ? '<a href="../../generated/example-image.jpg" download="example-image.jpg">Baixar Imagem</a>' : ''}
-                                    ${entry.outputType === 'audio' ? '<a href="../../generated/example-audio.wav" download="example-audio.mp3">Baixar Áudio</a>' : ''}
-                                    ${entry.outputType === 'text' ? '<a href="../../generated/example-text.txt" download="example-text.txt">Baixar Texto</a>' : ''}
-                                    <button class="deleteButton" onclick="deleteEntry(${index})">Delete</button>
-                                    <button class="moveUpButton" onclick="moveEntryUp(${index})">Move Up</button>
-                                    <button class="moveDownButton" onclick="moveEntryDown(${index})">Move Down</button>
+                                    ${entry.outputType === 'image' ? `<div class="downloadButton"><a href="${objectUrl}" download="example-image.jpg">Baixar Imagem</a></div>` : ''}
+                                    ${entry.outputType === 'audio' ? `<div class="downloadButton"><a href="${objectUrl}" download="example-audio.mp3">Baixar Áudio</a></div>` : ''}
+                                    ${entry.outputType === 'text' ? `<div class="downloadButton"><a href="${objectUrl}" download="example-text.txt">Baixar Texto</a></div>` : ''}
+                                    <button class="deleteButton" onclick="deleteEntry(${index})"><span id="themeIcon" class="material-icons">delete</span></button>
+                                    <button class="moveUpButton" onclick="moveEntryUp(${index})"><span id="themeIcon" class="material-icons">arrow_upward</span></button>
+                                    <button class="moveDownButton" onclick="moveEntryDown(${index})"><span id="themeIcon" class="material-icons">arrow_downward</span></button>
                                 `;
                                 historyList.appendChild(listItem);
                             })
