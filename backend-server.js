@@ -2,12 +2,21 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const OpenAI = require('openai');
+require('dotenv').config();
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_KEY
+});
 
 const app = express();
 const port = 4000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const GENERATED_DIR = 'generated';
+if (!fs.existsSync(GENERATED_DIR)) fs.mkdirSync(GENERATED_DIR);
 
 const maxSize = 1024 * 1024 * 20;
 
@@ -84,7 +93,7 @@ app.get('/api/user-history', (req, res) => {
 });
 
 app.post('/api/process-upload', (req, res) => {
-    upload(req, res, (err) => {
+    upload(req, res, async (err) => {
         if (err) {
             res.statusCode = 412;
             return res.end('Error uploading file - ' + err.message);
@@ -92,24 +101,163 @@ app.post('/api/process-upload', (req, res) => {
         
         try {
             const { userType, outputType, email } = req.body;
-
+            const inputType = req.file.mimetype.split('/')[0]; // "image", "audio", "text"
+            const inputFilePath = req.file.path;
+    
+            let responseData, outputFilename, outputFilePath;
+    
+            if (inputType === 'image' && outputType === 'text') {
+                // Image -> Text (OCR using GPT-4 Vision)
+                const imageBuffer = fs.readFileSync(inputFilePath);
+                const image = imageBuffer.toString('base64');
+                responseData = await openai.chat.completions.create({
+                    model: 'gpt-4o-mini',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a core functioning part of a brazilian acessibility system. Please describe the image in a informative way in plain text in brazilian portuguese'
+                        },
+                        {
+                            role: 'user',
+                            content: [{ type: 'image_url', image_url:{ "url": `data:${req.file.mimetype};base64,${image}`} }]
+                        }
+                    ],
+                    max_tokens: 500
+                });
+    
+                const extractedText = responseData.choices[0].message.content;
+                console.log('Extracted text:', extractedText);
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.txt');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+                fs.writeFileSync(outputFilePath, extractedText);
+    
+            } else if (inputType === 'image' && outputType === 'audio') {
+                // Image -> Text -> Audio
+                const imageBuffer = fs.readFileSync(inputFilePath);
+                const extractedTextResponse = await openai.chat.completions.create({
+                    model: 'gpt-4-vision-preview',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'Describe this image in a detailed and informative way.'
+                        },
+                        {
+                            role: 'user',
+                            content: [{ type: 'image', image: imageBuffer }]
+                        }
+                    ],
+                    max_tokens: 500
+                });
+    
+                const extractedText = extractedTextResponse.choices[0].message.content;
+    
+                // Convert extracted text to speech
+                responseData = await openai.audio.speech.create({
+                    model: 'tts-1',
+                    input: extractedText,
+                    voice: 'alloy'
+                });
+    
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.mp3');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+                fs.writeFileSync(outputFilePath, Buffer.from(await responseData.arrayBuffer()));
+    
+            } else if (inputType === 'audio' && outputType === 'text') {
+                // Audio -> Text (Speech-to-Text using Whisper)
+                const audioFile = fs.createReadStream(inputFilePath);
+                responseData = await openai.audio.transcriptions.create({
+                    model: 'whisper-1',
+                    file: audioFile
+                });
+    
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.txt');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+                fs.writeFileSync(outputFilePath, responseData.text);
+    
+            } else if (inputType === 'audio' && outputType === 'image') {
+                // Audio -> Text -> Image
+                const audioFile = fs.createReadStream(inputFilePath);
+                const transcription = await openai.audio.transcriptions.create({
+                    model: 'whisper-1',
+                    file: audioFile
+                });
+    
+                const extractedText = transcription.text;
+    
+                // Generate image from text
+                responseData = await openai.images.generate({
+                    prompt: extractedText,
+                    model: 'dall-e-3'
+                });
+    
+                const imageUrl = responseData.data[0].url;
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.png');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+    
+                // Download the generated image
+                const imageResponse = await fetch(imageUrl);
+                const imageBuffer = await imageResponse.arrayBuffer();
+                fs.writeFileSync(outputFilePath, Buffer.from(imageBuffer));
+    
+            } else if (inputType === 'text' && outputType === 'image') {
+                // Text -> Image (Generate an image from text using DALL·E)
+                const textPrompt = fs.readFileSync(inputFilePath, 'utf8');
+                responseData = await openai.images.generate({
+                    prompt: textPrompt,
+                    model: 'dall-e-3'
+                });
+    
+                const imageUrl = responseData.data[0].url;
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.png');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+    
+                // Download the generated image
+                const imageResponse = await fetch(imageUrl);
+                const imageBuffer = await imageResponse.arrayBuffer();
+                fs.writeFileSync(outputFilePath, Buffer.from(imageBuffer));
+    
+            } else if (inputType === 'text' && outputType === 'audio') {
+                // Text -> Audio (Convert text to speech)
+                const textContent = fs.readFileSync(inputFilePath, 'utf8');
+                responseData = await openai.audio.speech.create({
+                    model: 'tts-1',
+                    input: textContent,
+                    voice: 'alloy'
+                });
+    
+                outputFilename = req.file.filename.replace(/\.[^.]+$/, '.mp3');
+                outputFilePath = path.join(GENERATED_DIR, outputFilename);
+                fs.writeFileSync(outputFilePath, Buffer.from(await responseData.arrayBuffer()));
+    
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: `Invalid conversion: ${inputType} -> ${outputType} not supported`
+                });
+            }
+    
+            // Save history if user is a researcher
             if (userType === 'researcher') {
-                const history = JSON.parse(fs.readFileSync('data/history/history.json', 'utf8'));
+                const historyPath = 'data/history/history.json';
+                const history = fs.existsSync(historyPath) ? JSON.parse(fs.readFileSync(historyPath, 'utf8')) : [];
                 history.push({
                     username: email,
                     filename: req.file.filename,
+                    outputFilename: outputFilename,
                     outputType: outputType,
-                    inputType: req.file.mimetype.split('/')[0],
+                    inputType: inputType,
                     timestamp: new Date().toISOString()
                 });
-                
-                fs.writeFileSync('data/history/history.json', JSON.stringify(history, null, 2));
+                fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
             }
+            
 
             res.json({
                 success: true,
-                message: 'Upload realizado com sucesso!'
+                outputFilename,
+                outputFilePath
             });
+    
         } catch (error) {
             console.error('Error processing upload:', error);
             res.status(500).json({
@@ -129,10 +277,12 @@ app.delete('/api/history/:index', (req, res) => {
         const userHistory = history.filter(entry => entry.username === email);
 
         if (index >= 0 && index < userHistory.length) {
-             const fileToDelete = userHistory[index].filename;
+             const uploadFileToDelete = userHistory[index].filename;
+             const generatedFileToDelete = userHistory[index].outputFilename;
 
              try {
-                 fs.unlinkSync(`uploads/${fileToDelete}`);
+                 fs.unlinkSync(`uploads/${uploadFileToDelete}`);
+                 fs.unlinkSync(`generated/${generatedFileToDelete}`);
              } catch (fileError) {
                  console.error('Error deleting file:', fileError);
              }

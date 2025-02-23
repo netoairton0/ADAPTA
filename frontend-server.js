@@ -128,15 +128,20 @@ app.post('/file/upload', (req, res) => {
         form.append('outputType', req.body.outputType);
 
         try {
+            let responseData
             await axios.post(`${API_SERVER}/api/process-upload`, form, {
                 headers: {
                     ...form.getHeaders()
                 }
+            }).then(response => {
+                responseData = response.data;
             });
 
             res.json({
                 success: true,
-                message: 'Upload realizado com sucesso!'
+                message: 'Upload realizado com sucesso!',
+                outputFilename: responseData.outputFilename,
+                outputFilePath: responseData.outputFilePath
             });
 
         } catch (error) {
