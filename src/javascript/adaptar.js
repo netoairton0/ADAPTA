@@ -63,10 +63,10 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
                 method: 'POST',
                 body: formData
             })
-            //.then(response => response.data)
+            .then(response => response.json())
             .then(result => {
                 console.log('Success:', result);
-                //window.location.href = `/result?output=${maintextType}&?path=${result.outputFilename}`;
+                window.location.href = `/result?output=${maintextType}&path=${result.outputFilename}`;;
             })
             .catch(error => {
                 console.error('Error:', error);

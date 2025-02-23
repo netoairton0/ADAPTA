@@ -1,19 +1,28 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const output = urlParams.get('output');
+    const path = urlParams.get('path');
+
+    if (output && path) {
+        console.log('Fetching and displaying media:', output, path);
+        fetchAndDisplayMedia(output, path);
+    } else {
+        console.error('Missing output or path parameter');
+    }
+});
+
 async function fetchAndDisplayMedia(mediaType, path) {
     const resultPreview = document.getElementById('resultPreview');
 
     console.log(mediaType, path);
     
     try {
-        // Show loading state
         resultPreview.innerHTML = 'Loading...';
         
-        // Fetch media as blob
-        const response = await fetch(`/api/generated/${path}`);
+        const response = await fetch(`/generated/${path}`);
         if (!response.ok) throw new Error('Failed to fetch media');
         
-        // Get the blob from response
         const blob = await response.blob();
-        // Create an object URL from the blob
         const objectUrl = URL.createObjectURL(blob);
         
         let mediaHtml = '';
@@ -41,11 +50,10 @@ async function fetchAndDisplayMedia(mediaType, path) {
                 break;
                 
             case 'text':
-                // For text files, we might want to read and display the content
                 const text = await blob.text();
                 mediaHtml = `
                     <div style="width: 100%; height: 400px; border: 1px solid #ccc; overflow: auto; padding: 10px;">
-                        <pre>${text}</pre>
+                        <p>${text}</p>
                     </div>
                     <div class="downloadButton">
                         <a class="downloadButton" href="${objectUrl}" download="generated-text.txt">Baixar Texto</a>
@@ -56,7 +64,6 @@ async function fetchAndDisplayMedia(mediaType, path) {
         
         resultPreview.innerHTML = mediaHtml;
         
-        // Clean up function to revoke object URLs when the content changes
         const cleanup = () => {
             URL.revokeObjectURL(objectUrl);
             resultPreview.removeEventListener('change', cleanup);

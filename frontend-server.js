@@ -111,6 +111,23 @@ app.get('/result', (req, res) => {
     res.render('result', { output });
 });
 
+app.get("/generated/:filename", async (req, res) => {
+    try {
+        const response = await fetch(`${API_SERVER}/api/generated/${req.params.filename}`);
+
+        if (!response.ok) {
+            return res.status(response.status).send("File not found");
+        }
+
+        const fileBuffer = await response.arrayBuffer(); 
+        res.setHeader("Content-Type", response.headers.get("content-type"));
+        res.send(Buffer.from(fileBuffer));
+    } catch (error) {
+        console.error("Error fetching file:", error);
+        res.status(500).send("Error fetching file");
+    }
+});
+
 app.post('/file/upload', (req, res) => {
     upload(req, res, async (err) => {
         if (err) {

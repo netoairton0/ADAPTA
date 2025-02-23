@@ -92,6 +92,17 @@ app.get('/api/user-history', (req, res) => {
     }
 });
 
+app.get("/api/generated/:filename", (req, res) => {
+    const filePath = path.join(__dirname, "generated", req.params.filename);
+    
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error("Error sending file:", err);
+            res.status(err.status || 500).send("File not found");
+        }
+    });
+});
+
 app.post('/api/process-upload', (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
