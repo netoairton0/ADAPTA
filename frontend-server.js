@@ -189,7 +189,7 @@ app.get('/toggle-theme', (req, res) => {
 
 app.get('/increase-font', (req, res) => {
     let tamanhoFonte = parseInt(req.cookies.fontSize) || 20;
-    tamanhoFonte = Math.min(tamanhoFonte + 5, 30);
+    tamanhoFonte = Math.min(tamanhoFonte + 5, 40);
     res.cookie('fontSize', tamanhoFonte, { maxAge: 31536000000 });
     res.json({ fonte: tamanhoFonte });
 });
@@ -289,11 +289,14 @@ app.post('/login', async (req, res) => {
 
         const data = await fetchFromBackend('/auth/login', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 email,
                 password
             })
-        });
+        });        
 
         if (data.success) {
             res.cookie('userType', data.userType, { maxAge: 86400000 });

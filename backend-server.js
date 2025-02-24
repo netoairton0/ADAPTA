@@ -4,6 +4,36 @@ const path = require('path');
 const multer = require('multer');
 const OpenAI = require('openai');
 require('dotenv').config();
+require('dotenv-safe').config();
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+
+const USERS_FILE = 'data/users/users.json';
+const BLACKLIST_FILE = 'data/blacklist.json';
+const SECRET_KEY = process.env.JWT_SECRET;
+
+const blacklist = fs.existsSync(BLACKLIST_FILE)
+    ? JSON.parse(fs.readFileSync(BLACKLIST_FILE, 'utf8'))
+    : [];
+
+const readUsers = () => {
+    if (fs.existsSync(USERS_FILE)) {
+        return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    }
+    return [];
+};
+
+const writeUsers = (users) => {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+};
+
+const hashPassword = (password) => {
+    return crypto.createHmac('sha512', SECRET_KEY).update(password).digest('hex');
+};
+
+const saveBlacklist = () => {
+    fs.writeFileSync(BLACKLIST_FILE, JSON.stringify(blacklist, null, 2));
+};
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_KEY
@@ -44,31 +74,70 @@ const upload = multer({
     fileFilter: fileFilter
 }).single('filename');
 
+app.post('/auth/register', (req, res) => {
+    const { email, password, userType } = req.body;
+
+    try {
+        const users = readUsers();
+        if (users.some(user => user.email === email)) {
+            return res.status(400).json({ success: false, message: 'Email já registrado' });
+        }
+
+        const hashedPassword = hashPassword(password);
+        users.push({ email, password: hashedPassword, userType });
+
+        writeUsers(users);
+        res.status(201).json({ success: true, message: 'Usuário registrado com sucesso' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao registrar usuário' });
+    }
+});
+
 app.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
-    
-    try {
-        const users = JSON.parse(fs.readFileSync('data/users/users.json', 'utf8'));
-        const user = users.find(u => u.email === email && u.password === password);
 
-        if (user) {
-            res.json({
-                success: true,
-                userType: user.type
-            });
-        } else {
-            res.status(401).json({
-                success: false,
-                message: 'Invalid credentials'
-            });
+    try {
+        const users = readUsers();
+        const user = users.find(u => u.email === email && u.password === hashPassword(password));
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
         }
+
+        const token = jwt.sign({ email: user.email, userType: user.userType }, SECRET_KEY, { expiresIn: '1h' });
+        res.json({ success: true, token, userType: user.userType });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Server error during authentication'
-        });
+        res.status(500).json({ success: false, message: 'Erro ao autenticar usuário' });
     }
+});
+
+const authenticateToken = (req, res, next) => {
+    const token = req.headers['authorization'];
+
+    if (!token) return res.status(401).json({ success: false, message: 'Token não fornecido' });
+    if (blacklist.includes(token)) return res.status(403).json({ success: false, message: 'Token inválido' });
+
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) return res.status(403).json({ success: false, message: 'Token inválido' });
+
+        req.user = user;
+        next();
+    });
+};
+
+app.post('/auth/logout', (req, res) => {
+    const token = req.headers['authorization'];
+
+    if (token) {
+        blacklist.push(token);
+        saveBlacklist();
+    }
+
+    res.json({ success: true, message: 'Logout realizado com sucesso' });
+});
+
+app.get('/api/protected', authenticateToken, (req, res) => {
+    res.json({ success: true, message: `Acesso autorizado para ${req.user.email} (${req.user.userType})` });
 });
 
 app.get('/api/user-history', (req, res) => {
