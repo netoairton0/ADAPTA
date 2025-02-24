@@ -48,6 +48,9 @@ app.use(express.urlencoded({ extended: true }));
 const GENERATED_DIR = 'generated';
 if (!fs.existsSync(GENERATED_DIR)) fs.mkdirSync(GENERATED_DIR);
 
+const UPLOADS_DIR = 'uploads';
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR);
+
 const maxSize = 1024 * 1024 * 20;
 
 const storage = multer.diskStorage({
@@ -74,7 +77,7 @@ const upload = multer({
     fileFilter: fileFilter
 }).single('filename');
 
-app.post('/auth/register', (req, res) => {
+app.post('/api/auth/register', (req, res) => {
     const { email, password, userType } = req.body;
 
     try {
@@ -82,18 +85,18 @@ app.post('/auth/register', (req, res) => {
         if (users.some(user => user.email === email)) {
             return res.status(400).json({ success: false, message: 'Email já registrado' });
         }
-
-        const hashedPassword = hashPassword(password);
+        const hashedPassword = hashPassword(String(password));
         users.push({ email, password: hashedPassword, userType });
 
         writeUsers(users);
         res.status(201).json({ success: true, message: 'Usuário registrado com sucesso' });
     } catch (error) {
+        console.error('Error registering user:', error);
         res.status(500).json({ success: false, message: 'Erro ao registrar usuário' });
     }
 });
 
-app.post('/auth/login', (req, res) => {
+app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
 
     try {

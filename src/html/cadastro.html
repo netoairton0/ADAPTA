@@ -28,7 +28,7 @@
 
     <main>
         <p id="loginTitle">Crie sua conta</p>
-        <form id="loginForm">
+        <form id="loginForm" action="/register" method="post">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
 
@@ -37,16 +37,15 @@
 
             <label for="passwordConfirm">Confirme sua senha</label>
             <input type="password" id="passwordConfirm" name="passwordConfirm" required>
-
             <label>Qual o tipo de conta a ser criada?</label>
             <div class="divHeader">
                 <label class="container">Usuário padrão
-                    <input  style="width: 50px;" type="radio" checked="checked" name="radio">
+                    <input style="width: 50px;" type="radio" name="userType" value="user">
                     <span class="checkmark"></span>
                 </label>
                 
                 <label class="container">Pesquisador
-                    <input style="width: 50px;" type="radio" name="radio">
+                    <input style="width: 50px;" type="radio" name="userType" value="researcher">
                     <span class="checkmark"></span>
                 </label>
             </div>
@@ -57,5 +56,14 @@
 
     <script src="../javascript/theme.js"></script>
     <script src="../javascript/fonts.js"></script>
+    <script>
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('click', (e) => {
+                radioButtons.forEach(btn => btn.checked = false);
+                e.target.checked = true;
+            });
+        });
+    </script>
 </body>
 </html>

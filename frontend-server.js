@@ -283,11 +283,35 @@ app.post('/history/move-down/:index', async (req, res) => {
     }
 });
 
+app.post('/register', async (req, res) => {
+    const { email, password, userType } = req.body;
+    
+    const data = await fetchFromBackend(`/api/auth/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email,
+            password,
+            userType
+        })
+    });
+
+    if (data.success) {
+        res.redirect('/login');
+    } else if (data.message === 'Email já registrado') {
+        res.status(400).json({ success: false, message: 'Email já registrado' });
+    } else {
+        res.status(400).json({ success: false, message: 'Erro ao cadastrar usuário' });
+    } 
+});
+
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const data = await fetchFromBackend('/auth/login', {
+        const data = await fetchFromBackend('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
